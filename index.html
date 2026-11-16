@@ -2,9 +2,12 @@
 <html lang="en">
 	<head>
 <script>
-(function(){var of=window.fetch.bind(window);window.fetch=async function(u,o){var url=(typeof u==='string')?u:((u&&u.url)||'');
-if(/index\.wasm(\?.*)?$/.test(url)){var bufs=await Promise.all(['w00.bin', 'w01.bin', 'w02.bin', 'w03.bin', 'w04.bin', 'w05.bin', 'w06.bin', 'w07.bin', 'w08.bin', 'w09.bin', 'w10.bin', 'w11.bin', 'w12.bin', 'w13.bin'].map(function(p){return of(p).then(function(r){return r.arrayBuffer();});}));
-var blob=new Blob(bufs,{type:'application/wasm'});return new Response(blob,{status:200,headers:{'Content-Type':'application/wasm','Content-Length':String(blob.size)}});}
+(function(){var of=window.fetch.bind(window);var man=null;
+async function M(){if(!man){man=await of('parts.json?v='+Date.now()).then(function(r){return r.json();});}return man;}
+window.fetch=async function(u,o){var url=(typeof u==='string')?u:((u&&u.url)||'');var mm=url.match(/(index\.(wasm|pck))(\?.*)?$/);
+if(mm){var m=await M();var key=mm[1];var parts=m[key];if(parts){var bufs=await Promise.all(parts.map(function(p){return of(p+'?v='+m.v).then(function(r){return r.arrayBuffer();});}));
+var type=key.endsWith('wasm')?'application/wasm':'application/octet-stream';var blob=new Blob(bufs,{type:type});
+return new Response(blob,{status:200,headers:{'Content-Type':type,'Content-Length':String(blob.size)}});}}
 return of(u,o);};})();
 </script>
 		<meta charset="utf-8">
@@ -117,7 +120,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":3818696,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":3847320,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
