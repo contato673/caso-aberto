@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: big-field
+    runtime: docker
+    plan: free
+    healthCheckPath: /
